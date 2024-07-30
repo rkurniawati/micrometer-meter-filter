@@ -11,18 +11,29 @@ import java.util.Set;
 
 @Builder
 @Getter
+/*
+ * A filter that accepts or denies meters based on the first character of their name.
+ */
 public class AtoZFilter implements MeterFilter {
 
-    private boolean setOfRangesContains(Set<Range> set, char c) {
-        return set.stream().anyMatch(range -> range.contains(c));
-    }
+    @Builder.Default
+    private Set<Range> accept = Set.of();
 
-    private final Set<Range> accept;
-    private final Set<Range> deny;
+    @Builder.Default
+    private Set<Range> deny = Set.of();
 
+    /**
+     * Create a new filter with the given accept and deny ranges.
+     * @param accept the ranges to accept
+     * @param deny the ranges to deny
+     */
     public AtoZFilter(Set<Range> accept, Set<Range> deny) {
         this.accept = accept;
         this.deny = deny;
+    }
+
+    private boolean setOfRangesContains(Set<Range> set, char c) {
+        return set.stream().anyMatch(range -> range.contains(c));
     }
 
     @Override
